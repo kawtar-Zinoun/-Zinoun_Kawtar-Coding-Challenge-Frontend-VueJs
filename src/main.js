@@ -9,11 +9,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
 
+Vue.use(VueRouter)
+
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
 
-Vue.use(VueRouter)
 
 
 new Vue({

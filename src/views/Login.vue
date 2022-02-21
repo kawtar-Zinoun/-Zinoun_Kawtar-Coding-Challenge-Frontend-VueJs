@@ -1,14 +1,11 @@
 <template>
   <div class="container">
-
-      <span class="title">
-        Front-End Coding Challenge
-      </span>
-
-      <div class="box">
-       <a href="https://github.com/login/oauth/authorize/?client_id=0b4c30e2607568994db1"> Authorize my Github Account </a>
-      </div>
-
+    <span class="title">
+      Front-End Coding Challenge
+    </span>
+    <div class="box">
+      <a href="https://github.com/login/oauth/authorize/?client_id=0b4c30e2607568994db1&scope=repo"> Authorize my Github Account </a>
+    </div>
   </div>
 </template>
 
@@ -16,7 +13,6 @@
 export default 
 {
   name: 'Login',
-  
   data() {
     return {
       info: null
@@ -27,12 +23,10 @@ export default
 
     getAccessToken(code) {     // request access token with gatekeeper api
       this.axios
-      .get('http://localhost:9999/authenticate/'+code)   
-      .then(response => (console.log(response)))
+      .get('http://localhost:9999/authenticate/'+code)  
+      .then((response) => this.$router.push({ name: 'Home', params: { accessToken: response.data.token } }))
     }
   },
-  
-  
 
   mounted() { 
       //                            fetching github code from url 
@@ -42,12 +36,11 @@ export default
       // check if url has parameter
       let code = (splitedUrl.length > 1 && splitedUrl[1] !== '') ? myUrl.match(/\?code=(.*)#/)[1] : null ; 
       
-      if (code != null) this.getAccessToken(code);
+      if (code != null && code != undefined) this.getAccessToken(code);
 
     
   }
 }
-
 </script>
 
 
@@ -58,7 +51,7 @@ export default
   min-width: 100vw;
   font-family: 'Poppins', sans-serif;
   background-color:#95389E;
-  }
+}
 
 
 .title {
