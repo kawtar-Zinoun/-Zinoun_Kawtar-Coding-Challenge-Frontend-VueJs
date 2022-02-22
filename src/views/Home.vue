@@ -63,7 +63,7 @@ export default
                     'Authorization': `token ${access_token}`
                 }})
                 .then((res) => {
-                console.log(res.data)
+                console.log(res.data);
                 this.user_repos = res.data;
                 })
                 .catch((error) => {
