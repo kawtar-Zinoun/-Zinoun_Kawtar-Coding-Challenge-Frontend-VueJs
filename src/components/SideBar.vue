@@ -2,15 +2,17 @@
 
     <div class="sidebar">
         <span class="sidebar-title"> Your Repositories </span>
+
         <autocomplete
             placeholder="Search here..."
-            :source=repos
+            :source= repos
             input-class = "form-control autocomplete"
             results-property="items"
             :results-display="formattedDisplay">
         </autocomplete>
+
         <div class="repos">
-            <div  v-for="(repo, index) in repos" :key="index" class="repo">
+            <div v-for="(repo, index) in repos" :key="index" class="repo" @click="selectRepo(index)">
             <span> {{repo.name}} </span>
             </div>
         </div>
@@ -26,10 +28,16 @@ export default {
         repos : Array
     },
 
+
     methods : {
         formattedDisplay (result) {
         return result.name 
+        },
+        selectRepo(index) {
+           // console.log(this.repos[index]);
+             this.$emit('clicked', this.repos[index]);
         }
+      
     }
 }
 
@@ -38,7 +46,7 @@ export default {
 <style>
 .sidebar {
    height: 100vh;
-   width: 30%;
+   max-width: 30%;
    background-color : white ;
    display:block;
    overflow-y: scroll;

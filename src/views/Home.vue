@@ -1,25 +1,30 @@
 <template>
   <div class="container">
     
-  <div class="topbar">
-    <span class="bar-title">
-       Welcome, {{name}}
-    </span>
-  </div>
-
-  <SideBar :repos= user_repos />
+    <div class="topbar">
+        <span class="bar-title">
+        Welcome, {{name}}
+        </span>
+    </div>
+    
+    <div class="wrapper">
+        <SideBar :repos= user_repos @clicked="onRepoClick" />
+        <CommitList :token= token :selectedRepo= selectedRepo :user_login= user_login />
+    </div>
 
   </div>
 </template>
 
 <script>
 import SideBar from '../components/SideBar.vue';
+import CommitList from '../components/CommitList.vue';
 
 export default
 {
     name: 'Home',
     components : {
-        SideBar
+        SideBar,
+        CommitList
     },
     
     data() {
@@ -29,6 +34,8 @@ export default
         user_url : null,
         user_login : null,
         user_repos : null,
+        selectedRepo : null,
+        selectedRepoData: null,
         };
     },
 
@@ -63,13 +70,16 @@ export default
                     'Authorization': `token ${access_token}`
                 }})
                 .then((res) => {
-                console.log(res.data);
                 this.user_repos = res.data;
                 })
                 .catch((error) => {
                 console.error(error)
                 })
-        }
+        },
+
+        onRepoClick(value) {
+            this.selectedRepo = value;
+        },
     }
 
 }
@@ -96,6 +106,10 @@ export default
     padding-right: 10px;
     padding-top: 2vh;
     color: white;
+}
+.wrapper {
+    display : flex;
+    flex-direction: row;
 }
 
 </style>
