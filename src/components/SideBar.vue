@@ -8,7 +8,8 @@
             :source= repos
             input-class = "form-control autocomplete"
             results-property="items"
-            :results-display="formattedDisplay">
+            :results-display="formattedDisplay"
+            @selected="selectMyRepo">
         </autocomplete>
 
         <div class="repos">
@@ -36,6 +37,9 @@ export default {
         selectRepo(index) {
            // console.log(this.repos[index]);
              this.$emit('clicked', this.repos[index]);
+        },
+        selectMyRepo(value) {
+            this.$emit('itemClicked', value.selectedObject)
         }
       
     }

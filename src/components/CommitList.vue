@@ -1,7 +1,14 @@
 <template>
     <div v-if="selectedRepo" class="repo-area">
         
+        <div v-if="branches" class="branch-dropdown">
+            <select name="cars" id="cars">
+            <option v-for="(branch,index) in branches" :key="index" :value="branch.name">{{branch.name}}</option>
+            </select>
+        </div>
+
         <span class="repo-name"> {{selectedRepo.name }} </span>
+
 
         <div class="commit-history">
             <div v-for="(repo, index) in selectedRepoData" :key="index" class="single-commit">
@@ -9,6 +16,7 @@
                 <span class="committer"> by {{repo.commit.committer.name}} in<span class="commit-date">{{repo.commit.committer.date}}</span></span>
             </div>
         </div>
+        
         
     </div>
 </template>
@@ -25,11 +33,13 @@ export default {
         selectedRepo : function(value) {
         this.selectedRepo = value;
         this.getCommitList(this.token);
+        this.getBranches(this.token);
     }
     },
     data() {
         return {
         selectedRepoData: null,
+        branches: null,
         };
     },
 
@@ -45,6 +55,21 @@ export default {
                 }})
                 .then((res) => {
                 this.selectedRepoData = res.data;
+                console.log(res.data);
+
+                })
+                .catch((error) => {
+                console.error(error)
+                })
+        },
+        getBranches(access_token) {
+            const branchesUrl = "https://api.github.com/repos/" + this.user_login + "/" + this.selectedRepo.name + "/branches";
+            this.axios.get(branchesUrl , {
+                headers : {
+                    'Authorization': `token ${access_token}`
+                }})
+                .then((res) => {
+                this.branches = res.data;
                 })
                 .catch((error) => {
                 console.error(error)
@@ -82,11 +107,12 @@ export default {
 .single-commit {
     border : 1px solid #d0d7de;
     display: block;
-    height :70px;
+    max-height :80px;
     width: 90%;
     margin-left:50px;
     margin-top:20px;
     border-radius: 10px;
+    overflow: visible;
 }
 .single-commit:hover {
     background-color: #EEEEEE;
@@ -98,9 +124,9 @@ export default {
     padding: 10px 10px 0px 10px;
 }
 .single-commit .commit-message {
-     font-size: 15px;
-     font-weight: 400;
-     display: block;
+    font-size: 15px;
+    font-weight: 400;
+    display: block;
 }
 .single-commit .committer {
     font-size: 11px;
@@ -110,6 +136,17 @@ export default {
 .commit-date {
     color: #57606a !important;
     white-space: nowrap !important;
+}
+
+.branch-dropdown {
+    float:right;
+    padding : 20px;
+}
+.branch-dropdown select {
+    border: 1px solid #d0d7de !important;
+    padding :5px;
+
+
 }
 
 </style>

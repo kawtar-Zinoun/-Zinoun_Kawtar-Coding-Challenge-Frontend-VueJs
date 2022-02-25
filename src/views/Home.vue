@@ -8,7 +8,7 @@
     </div>
     
     <div class="wrapper">
-        <SideBar :repos= user_repos @clicked="onRepoClick" />
+        <SideBar :repos= user_repos @clicked="onRepoClick" @itemClicked="onRepoClick" />
         <CommitList :token= token :selectedRepo= selectedRepo :user_login= user_login />
     </div>
 
