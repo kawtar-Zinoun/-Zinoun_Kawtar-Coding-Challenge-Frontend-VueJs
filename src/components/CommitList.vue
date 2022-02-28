@@ -2,8 +2,8 @@
     <div v-if="selectedRepo" class="repo-area">
         
         <div v-if="branches" class="branch-dropdown">
-            <select name="cars" id="cars">
-            <option v-for="(branch,index) in branches" :key="index" :value="branch.name">{{branch.name}}</option>
+            <select @change="selectBranch($event)"  name="branches" id="branches">
+            <option v-for="(branch,index) in branches" :key="index" :value="branch.commit.sha">{{branch.name}}</option>
             </select>
         </div>
 
@@ -40,6 +40,7 @@ export default {
         return {
         selectedRepoData: null,
         branches: null,
+        selectedBranchCommits : null
         };
     },
 
@@ -55,8 +56,6 @@ export default {
                 }})
                 .then((res) => {
                 this.selectedRepoData = res.data;
-                console.log(res.data);
-
                 })
                 .catch((error) => {
                 console.error(error)
@@ -70,6 +69,25 @@ export default {
                 }})
                 .then((res) => {
                 this.branches = res.data;
+                })
+                .catch((error) => {
+                console.error(error)
+                })
+        },
+        selectBranch(event) {
+            this.getCommitsByBranch(this.token, event.target.value)
+            console.log(event.target.value)
+        },
+        getCommitsByBranch(access_token, branch) {
+            const branchUrl = "https://api.github.com/repos/" + this.user_login + "/" + this.selectedRepo.name + "/commits" ;
+            this.axios.get(branchUrl , {
+                headers : {
+                    'Authorization': `token ${access_token}`
+                },                                           
+                params: { sha : branch, per_page : 100 } })
+                .then((res) => {
+                this.selectedRepoData = res.data;
+               // console.log(res.data)    // render and map data yay the best step
                 })
                 .catch((error) => {
                 console.error(error)
